@@ -1,6 +1,21 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
-import { MagnifyingGlassIcon, StarIcon } from '@heroicons/vue/24/outline'
+import { MagnifyingGlassIcon, StarIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+
+const searchQuery = ref('')
+const isSearchExpanded = ref(false)
+
+const toggleSearch = () => {
+  isSearchExpanded.value = !isSearchExpanded.value
+  if (!isSearchExpanded.value) {
+    searchQuery.value = ''
+  }
+}
+
+const emptySearchQuery = () => {
+  searchQuery.value = ''
+}
 </script>
 
 <template>
@@ -13,8 +28,19 @@ import { MagnifyingGlassIcon, StarIcon } from '@heroicons/vue/24/outline'
         </RouterLink>
 
         <div class="flex items-center gap-2">
+          <div class="hidden md:flex items-center relative">
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Поиск криптовалют..."
+              class="w-64 px-4 py-2 pl-10 pr-4 bg-crypto-bg border border-crypto-border rounded-lg focus:outline-none focus:ring-2 focus:ring-crypto-accent focus:border-transparent"
+            />
+            <MagnifyingGlassIcon class="absolute left-3 w-5 h-5 text-crypto-text-secondary pointer-events-none" />
+          </div>
+
           <button
-            class="bg-crypto-accent text-white p-2 rounded-full hover:opacity-90 transition-opacity"
+            @click="toggleSearch"
+            class="md:hidden bg-crypto-accent text-white p-2 rounded-full hover:opacity-90 transition-opacity"
           >
             <MagnifyingGlassIcon class="w-5 h-5" />
           </button>
@@ -26,6 +52,28 @@ import { MagnifyingGlassIcon, StarIcon } from '@heroicons/vue/24/outline'
             <StarIcon class="w-5 h-5" />
           </RouterLink>
         </div>
+      </div>
+
+      <div
+        v-if="isSearchExpanded"
+        class="md:hidden flex items-center gap-2 mt-3 w-full"
+      >
+        <div class="flex-1 relative">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="Поиск криптовалют..."
+            class="w-full px-4 py-2 pl-10 pr-10 bg-crypto-bg border border-crypto-border rounded-lg focus:outline-none focus:ring-2 focus:ring-crypto-accent focus:border-transparent"
+            autofocus
+          />
+          <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-crypto-text-secondary" />
+        </div>
+        <button
+          @click="emptySearchQuery"
+          class="bg-crypto-card border border-crypto-border text-crypto-text p-2 rounded-lg hover:opacity-90 transition-opacity"
+        >
+          <XMarkIcon class="w-5 h-5" />
+        </button>
       </div>
     </div>
   </header>
