@@ -5,6 +5,10 @@ import type { CoinDetail } from '@/types'
 import { getCoinById } from '@/api/coins'
 import Preloader from '@/components/Preloader.vue'
 import { formatPrice } from '@/utils/format'
+import { useFavoritesStore } from '@/stores/favorites'
+import { StarIcon } from '@heroicons/vue/24/solid'
+import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
+import type { CoinCardData } from '@/types'
 
 const route = useRoute()
 const isLoading = ref(false)
@@ -12,6 +16,28 @@ const error = ref<string | null>(null)
 const coinDetail = ref<CoinDetail | null>(null)
 
 const coinId = computed(() => (route.params.id ? String(route.params.id) : null))
+
+const favoritesStore = useFavoritesStore()
+
+const isFavorite = computed(() => {
+  if (!coinDetail.value) return false
+  return favoritesStore.isFavorite(coinDetail.value.id)
+})
+
+const toggleFavorite = () => {
+  if (!coinDetail.value) return
+  
+  const coinCardData: CoinCardData = {
+    id: coinDetail.value.id,
+    name: coinDetail.value.name,
+    symbol: coinDetail.value.symbol,
+    current_price: coinDetail.value.market_data?.current_price?.usd || 0,
+    price_change_percentage_24h: coinDetail.value.market_data?.price_change_percentage_24h || 0,
+    image: coinDetail.value.image?.large || coinDetail.value.image?.small,
+  }
+  
+  favoritesStore.toggleFavorite(coinCardData)
+}
 
 const formatLargeNumber = (num: number | undefined): string => {
   if (num === undefined || num === null) return 'N/A'
@@ -104,8 +130,19 @@ watch(coinId, () => {
             :alt="coinDetail.name"
             class="w-16 h-16 rounded-full"
           />
-          <div>
-            <h1 class="text-3xl font-bold text-crypto-text">{{ coinDetail.name }}</h1>
+          <div class="flex-1">
+            <div class="flex items-center gap-3">
+              <h1 class="text-3xl font-bold text-crypto-text">{{ coinDetail.name }}</h1>
+              <button
+                @click="toggleFavorite"
+                class="p-2 rounded-full hover:bg-crypto-border transition-colors"
+                :class="isFavorite ? 'text-yellow-500' : 'text-crypto-text-secondary'"
+                :title="isFavorite ? 'Удалить из избранного' : 'Добавить в избранное'"
+              >
+                <StarIcon v-if="isFavorite" class="w-6 h-6" />
+                <StarOutlineIcon v-else class="w-6 h-6" />
+              </button>
+            </div>
             <p class="text-lg text-crypto-text-secondary uppercase">{{ coinDetail.symbol }}</p>
             <p v-if="coinDetail.market_cap_rank || coinDetail.market_data?.market_cap_rank" class="text-sm text-crypto-text-secondary mt-1">
               Ранг по рыночной капитализации: #{{ coinDetail.market_cap_rank || coinDetail.market_data?.market_cap_rank }}
