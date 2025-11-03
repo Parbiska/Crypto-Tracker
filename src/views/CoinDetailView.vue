@@ -3,7 +3,7 @@ import { useRoute, RouterLink } from 'vue-router'
 import { computed, ref, watch } from 'vue'
 import type { CoinDetail } from '@/types'
 import { getCoinById } from '@/api/coins'
-import Preloader from '@/components/Preloader.vue'
+import AppPreloader from '@/components/AppPreloader.vue'
 import { formatPrice } from '@/utils/format'
 import { useFavoritesStore } from '@/stores/favorites'
 import { StarIcon } from '@heroicons/vue/24/solid'
@@ -26,7 +26,7 @@ const isFavorite = computed(() => {
 
 const toggleFavorite = () => {
   if (!coinDetail.value) return
-  
+
   const coinCardData: CoinCardData = {
     id: coinDetail.value.id,
     name: coinDetail.value.name,
@@ -35,7 +35,7 @@ const toggleFavorite = () => {
     price_change_percentage_24h: coinDetail.value.market_data?.price_change_percentage_24h || 0,
     image: coinDetail.value.image?.large || coinDetail.value.image?.small,
   }
-  
+
   favoritesStore.toggleFavorite(coinCardData)
 }
 
@@ -86,11 +86,15 @@ const fetchCoinDetail = async () => {
   }
 }
 
-watch(coinId, () => {
-  if (coinId.value) {
-    fetchCoinDetail()
-  }
-}, { immediate: true })
+watch(
+  coinId,
+  () => {
+    if (coinId.value) {
+      fetchCoinDetail()
+    }
+  },
+  { immediate: true }
+)
 </script>
 
 <template>
@@ -108,7 +112,7 @@ watch(coinId, () => {
       </RouterLink>
     </div>
 
-    <Preloader v-else-if="isLoading" />
+    <AppPreloader v-else-if="isLoading" />
 
     <div v-else-if="error" class="bg-crypto-red/10 border border-crypto-red rounded-lg p-4 mb-6">
       <p class="text-crypto-red">{{ error }}</p>
@@ -144,8 +148,13 @@ watch(coinId, () => {
               </button>
             </div>
             <p class="text-lg text-crypto-text-secondary uppercase">{{ coinDetail.symbol }}</p>
-            <p v-if="coinDetail.market_cap_rank || coinDetail.market_data?.market_cap_rank" class="text-sm text-crypto-text-secondary mt-1">
-              Ранг по рыночной капитализации: #{{ coinDetail.market_cap_rank || coinDetail.market_data?.market_cap_rank }}
+            <p
+              v-if="coinDetail.market_cap_rank || coinDetail.market_data?.market_cap_rank"
+              class="text-sm text-crypto-text-secondary mt-1"
+            >
+              Ранг по рыночной капитализации: #{{
+                coinDetail.market_cap_rank || coinDetail.market_data?.market_cap_rank
+              }}
             </p>
           </div>
         </div>
@@ -160,7 +169,11 @@ watch(coinId, () => {
           <div v-if="coinDetail.market_data?.price_change_percentage_24h !== undefined">
             <p class="text-sm text-crypto-text-secondary mb-1">Изменение за 24ч</p>
             <p
-              :class="coinDetail.market_data.price_change_percentage_24h >= 0 ? 'text-crypto-green' : 'text-crypto-red'"
+              :class="
+                coinDetail.market_data.price_change_percentage_24h >= 0
+                  ? 'text-crypto-green'
+                  : 'text-crypto-red'
+              "
               class="text-2xl font-bold"
             >
               {{ coinDetail.market_data.price_change_percentage_24h >= 0 ? '+' : ''
@@ -195,7 +208,11 @@ watch(coinId, () => {
         <div class="bg-crypto-card border border-crypto-border rounded-lg p-4">
           <p class="text-sm text-crypto-text-secondary mb-2">Максимальное предложение</p>
           <p class="text-xl font-bold text-crypto-text">
-            {{ coinDetail.market_data?.max_supply ? formatSupply(coinDetail.market_data.max_supply) : '∞' }}
+            {{
+              coinDetail.market_data?.max_supply
+                ? formatSupply(coinDetail.market_data.max_supply)
+                : '∞'
+            }}
           </p>
         </div>
       </div>
@@ -209,7 +226,11 @@ watch(coinId, () => {
           <div v-if="coinDetail.market_data.price_change_percentage_24h !== undefined">
             <p class="text-sm text-crypto-text-secondary mb-1">За 24 часа</p>
             <p
-              :class="coinDetail.market_data.price_change_percentage_24h >= 0 ? 'text-crypto-green' : 'text-crypto-red'"
+              :class="
+                coinDetail.market_data.price_change_percentage_24h >= 0
+                  ? 'text-crypto-green'
+                  : 'text-crypto-red'
+              "
               class="text-lg font-bold"
             >
               {{ coinDetail.market_data.price_change_percentage_24h >= 0 ? '+' : ''
@@ -219,7 +240,11 @@ watch(coinId, () => {
           <div v-if="coinDetail.market_data.price_change_percentage_7d !== undefined">
             <p class="text-sm text-crypto-text-secondary mb-1">За 7 дней</p>
             <p
-              :class="coinDetail.market_data.price_change_percentage_7d >= 0 ? 'text-crypto-green' : 'text-crypto-red'"
+              :class="
+                coinDetail.market_data.price_change_percentage_7d >= 0
+                  ? 'text-crypto-green'
+                  : 'text-crypto-red'
+              "
               class="text-lg font-bold"
             >
               {{ coinDetail.market_data.price_change_percentage_7d >= 0 ? '+' : ''
@@ -229,7 +254,11 @@ watch(coinId, () => {
           <div v-if="coinDetail.market_data.price_change_percentage_30d !== undefined">
             <p class="text-sm text-crypto-text-secondary mb-1">За 30 дней</p>
             <p
-              :class="coinDetail.market_data.price_change_percentage_30d >= 0 ? 'text-crypto-green' : 'text-crypto-red'"
+              :class="
+                coinDetail.market_data.price_change_percentage_30d >= 0
+                  ? 'text-crypto-green'
+                  : 'text-crypto-red'
+              "
               class="text-lg font-bold"
             >
               {{ coinDetail.market_data.price_change_percentage_30d >= 0 ? '+' : ''
@@ -267,7 +296,10 @@ watch(coinId, () => {
             <p class="text-lg font-bold text-crypto-text">
               ${{ formatPrice(coinDetail.market_data.ath.usd) }}
             </p>
-            <p v-if="coinDetail.market_data.ath_date?.usd" class="text-xs text-crypto-text-secondary mt-1">
+            <p
+              v-if="coinDetail.market_data.ath_date?.usd"
+              class="text-xs text-crypto-text-secondary mt-1"
+            >
               {{ formatDate(coinDetail.market_data.ath_date.usd) }}
             </p>
           </div>
@@ -276,7 +308,10 @@ watch(coinId, () => {
             <p class="text-lg font-bold text-crypto-text">
               ${{ formatPrice(coinDetail.market_data.atl.usd) }}
             </p>
-            <p v-if="coinDetail.market_data.atl_date?.usd" class="text-xs text-crypto-text-secondary mt-1">
+            <p
+              v-if="coinDetail.market_data.atl_date?.usd"
+              class="text-xs text-crypto-text-secondary mt-1"
+            >
               {{ formatDate(coinDetail.market_data.atl_date.usd) }}
             </p>
           </div>
@@ -296,7 +331,10 @@ watch(coinId, () => {
       </div>
 
       <!-- Ссылки -->
-      <div v-if="coinDetail.links" class="bg-crypto-card border border-crypto-border rounded-lg p-6">
+      <div
+        v-if="coinDetail.links"
+        class="bg-crypto-card border border-crypto-border rounded-lg p-6"
+      >
         <h2 class="text-xl font-bold text-crypto-text mb-4">Полезные ссылки</h2>
         <div class="space-y-3">
           <div v-if="coinDetail.links.homepage && coinDetail.links.homepage.length > 0">
@@ -314,7 +352,9 @@ watch(coinId, () => {
               </a>
             </div>
           </div>
-          <div v-if="coinDetail.links.blockchain_site && coinDetail.links.blockchain_site.length > 0">
+          <div
+            v-if="coinDetail.links.blockchain_site && coinDetail.links.blockchain_site.length > 0"
+          >
             <p class="text-sm font-medium text-crypto-text-secondary mb-2">Блокчейн:</p>
             <div class="flex flex-wrap gap-2">
               <a
@@ -329,7 +369,11 @@ watch(coinId, () => {
               </a>
             </div>
           </div>
-          <div v-if="coinDetail.links.repos_url?.github && coinDetail.links.repos_url.github.length > 0">
+          <div
+            v-if="
+              coinDetail.links.repos_url?.github && coinDetail.links.repos_url.github.length > 0
+            "
+          >
             <p class="text-sm font-medium text-crypto-text-secondary mb-2">GitHub:</p>
             <div class="flex flex-wrap gap-2">
               <a

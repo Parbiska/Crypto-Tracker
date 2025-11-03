@@ -33,7 +33,7 @@ export const useFavoritesStore = defineStore('favorites', () => {
   }
 
   const isFavorite = (coinId: string): boolean => {
-    return favorites.value.some((coin) => coin.id === coinId)
+    return favorites.value.some(coin => coin.id === coinId)
   }
 
   const addFavorite = (coin: CoinCardData) => {
@@ -44,7 +44,7 @@ export const useFavoritesStore = defineStore('favorites', () => {
   }
 
   const removeFavorite = (coinId: string) => {
-    favorites.value = favorites.value.filter((coin) => coin.id !== coinId)
+    favorites.value = favorites.value.filter(coin => coin.id !== coinId)
     saveFavorites()
   }
 
@@ -66,4 +66,3 @@ export const useFavoritesStore = defineStore('favorites', () => {
     toggleFavorite,
   }
 })
-

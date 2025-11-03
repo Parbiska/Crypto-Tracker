@@ -3,7 +3,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import type { CoinCardData } from '@/types'
 import CoinCard from '@/components/CoinCard.vue'
-import Preloader from '@/components/Preloader.vue'
+import AppPreloader from '@/components/AppPreloader.vue'
 import { useSearchStore } from '@/stores/search'
 
 const route = useRoute()
@@ -32,7 +32,7 @@ const fetchSearchResults = async (query: string) => {
 
   try {
     await searchStore.performSearch(query)
-    
+
     const results = await searchStore.getSearchResultsAsCoinCards()
     coins.value = results
   } catch (err) {
@@ -52,7 +52,7 @@ onMounted(() => {
 
 watch(
   () => route.query.q,
-  async (newQuery) => {
+  async newQuery => {
     const query = typeof newQuery === 'string' ? newQuery.trim() : ''
     if (query) {
       await fetchSearchResults(query)
@@ -64,7 +64,7 @@ watch(
 
 watch(
   () => searchStore.searchResults,
-  async (newResults) => {
+  async newResults => {
     if (searchStore.hasSearchQuery && newResults.length > 0) {
       const results = await searchStore.getSearchResultsAsCoinCards()
       coins.value = results
@@ -80,14 +80,20 @@ watch(
       {{ searchQuery ? `Результаты поиска: "${searchQuery}"` : 'Поиск криптовалют' }}
     </h2>
 
-    <div v-if="!searchQuery" class="bg-crypto-card border border-crypto-border rounded-lg p-8 text-center">
+    <div
+      v-if="!searchQuery"
+      class="bg-crypto-card border border-crypto-border rounded-lg p-8 text-center"
+    >
       <p class="text-crypto-text-secondary text-lg">Введите запрос для поиска</p>
       <p class="text-crypto-text-secondary mt-2">Используйте поиск в шапке сайта</p>
     </div>
 
-    <Preloader v-else-if="displayedLoading" />
+    <AppPreloader v-else-if="displayedLoading" />
 
-    <div v-else-if="displayedError" class="bg-crypto-red/10 border border-crypto-red rounded-lg p-4 mb-6">
+    <div
+      v-else-if="displayedError"
+      class="bg-crypto-red/10 border border-crypto-red rounded-lg p-4 mb-6"
+    >
       <p class="text-crypto-red">{{ displayedError }}</p>
       <button
         @click="fetchSearchResults(searchQuery)"
@@ -98,7 +104,10 @@ watch(
     </div>
 
     <template v-else>
-      <div v-if="coins.length === 0" class="bg-crypto-card border border-crypto-border rounded-lg p-8 text-center">
+      <div
+        v-if="coins.length === 0"
+        class="bg-crypto-card border border-crypto-border rounded-lg p-8 text-center"
+      >
         <p class="text-crypto-text-secondary text-lg">Ничего не найдено</p>
         <p class="text-crypto-text-secondary mt-2">Попробуйте изменить поисковый запрос</p>
       </div>
@@ -109,4 +118,3 @@ watch(
     </template>
   </div>
 </template>
-

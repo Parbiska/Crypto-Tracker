@@ -63,7 +63,7 @@ export const useSearchStore = defineStore('search', () => {
       // Получаем ID найденных монет (ограничиваем 20 для производительности)
       const coinIds = searchResults.value
         .slice(0, 20)
-        .map((result) => result.id)
+        .map(result => result.id)
         .join(',')
 
       console.log('getSearchResultsAsCoinCards: coinIds:', coinIds)
@@ -108,4 +108,3 @@ export const useSearchStore = defineStore('search', () => {
     getSearchResultsAsCoinCards,
   }
 })
-

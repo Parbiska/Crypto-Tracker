@@ -2,7 +2,7 @@
 import { ref, computed, watchEffect } from 'vue'
 import type { CoinCardData, Coin } from '@/types'
 import CoinCard from '@/components/CoinCard.vue'
-import Preloader from '@/components/Preloader.vue'
+import AppPreloader from '@/components/AppPreloader.vue'
 import { getCoinsList } from '@/api/index'
 
 const coins = ref<CoinCardData[]>([])
@@ -98,7 +98,7 @@ watchEffect(() => {
 <template>
   <div>
     <h2 class="text-2xl font-bold text-crypto-text mb-6">Топ криптовалют</h2>
-    <Preloader v-if="isLoading" />
+    <AppPreloader v-if="isLoading" />
 
     <div v-else-if="error" class="bg-crypto-red/10 border border-crypto-red rounded-lg p-4 mb-6">
       <p class="text-crypto-red">{{ error }}</p>

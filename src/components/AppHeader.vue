@@ -10,7 +10,7 @@ const isSearchExpanded = ref(false)
 
 watch(
   () => route.query.q,
-  (newQuery) => {
+  newQuery => {
     const query = typeof newQuery === 'string' ? newQuery : ''
     searchQuery.value = query
   },
@@ -52,10 +52,7 @@ const emptySearchQuery = () => {
         </RouterLink>
 
         <div class="flex items-center gap-2">
-          <form
-            @submit.prevent="handleSearch"
-            class="hidden md:flex items-center relative"
-          >
+          <form @submit.prevent="handleSearch" class="hidden md:flex items-center relative">
             <input
               v-model="searchQuery"
               type="text"
@@ -101,7 +98,9 @@ const emptySearchQuery = () => {
             class="w-full px-4 py-2 pl-10 pr-12 bg-crypto-bg border border-crypto-border rounded-lg focus:outline-none focus:ring-2 focus:ring-crypto-accent focus:border-transparent"
             autofocus
           />
-          <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-crypto-text-secondary pointer-events-none" />
+          <MagnifyingGlassIcon
+            class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-crypto-text-secondary pointer-events-none"
+          />
           <button
             type="submit"
             class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-crypto-text-secondary hover:text-crypto-accent transition-colors"

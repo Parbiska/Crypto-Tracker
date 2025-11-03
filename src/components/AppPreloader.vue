@@ -3,4 +3,3 @@
     <p class="text-crypto-text-secondary">Загрузка...</p>
   </div>
 </template>
-
