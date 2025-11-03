@@ -1,10 +1,34 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { RouterLink } from 'vue-router'
+import { ref, watch } from 'vue'
+import { RouterLink, useRouter, useRoute } from 'vue-router'
 import { MagnifyingGlassIcon, StarIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
+const router = useRouter()
+const route = useRoute()
 const searchQuery = ref('')
 const isSearchExpanded = ref(false)
+
+watch(
+  () => route.query.q,
+  (newQuery) => {
+    const query = typeof newQuery === 'string' ? newQuery : ''
+    searchQuery.value = query
+  },
+  { immediate: true }
+)
+
+const handleSearch = (e?: Event) => {
+  if (e) {
+    e.preventDefault()
+  }
+  const query = searchQuery.value.trim()
+  if (query) {
+    router.push({
+      name: 'search',
+      query: { q: query },
+    })
+  }
+}
 
 const toggleSearch = () => {
   isSearchExpanded.value = !isSearchExpanded.value
@@ -28,15 +52,24 @@ const emptySearchQuery = () => {
         </RouterLink>
 
         <div class="flex items-center gap-2">
-          <div class="hidden md:flex items-center relative">
+          <form
+            @submit.prevent="handleSearch"
+            class="hidden md:flex items-center relative"
+          >
             <input
               v-model="searchQuery"
               type="text"
               placeholder="Поиск криптовалют..."
-              class="w-64 px-4 py-2 pl-10 pr-4 bg-crypto-bg border border-crypto-border rounded-lg focus:outline-none focus:ring-2 focus:ring-crypto-accent focus:border-transparent"
+              @keyup.enter="handleSearch"
+              class="w-64 px-4 py-2 pr-10 bg-crypto-bg border border-crypto-border rounded-lg focus:outline-none focus:ring-2 focus:ring-crypto-accent focus:border-transparent"
             />
-            <MagnifyingGlassIcon class="absolute left-3 w-5 h-5 text-crypto-text-secondary pointer-events-none" />
-          </div>
+            <button
+              type="submit"
+              class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-crypto-text-secondary hover:text-crypto-accent transition-colors cursor-pointer"
+            >
+              <MagnifyingGlassIcon class="w-5 h-5" />
+            </button>
+          </form>
 
           <button
             @click="toggleSearch"
@@ -54,8 +87,9 @@ const emptySearchQuery = () => {
         </div>
       </div>
 
-      <div
+      <form
         v-if="isSearchExpanded"
+        @submit.prevent="handleSearch"
         class="md:hidden flex items-center gap-2 mt-3 w-full"
       >
         <div class="flex-1 relative">
@@ -63,18 +97,26 @@ const emptySearchQuery = () => {
             v-model="searchQuery"
             type="text"
             placeholder="Поиск криптовалют..."
-            class="w-full px-4 py-2 pl-10 pr-10 bg-crypto-bg border border-crypto-border rounded-lg focus:outline-none focus:ring-2 focus:ring-crypto-accent focus:border-transparent"
+            @keyup.enter="handleSearch"
+            class="w-full px-4 py-2 pl-10 pr-12 bg-crypto-bg border border-crypto-border rounded-lg focus:outline-none focus:ring-2 focus:ring-crypto-accent focus:border-transparent"
             autofocus
           />
-          <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-crypto-text-secondary" />
+          <MagnifyingGlassIcon class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-crypto-text-secondary pointer-events-none" />
+          <button
+            type="submit"
+            class="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-crypto-text-secondary hover:text-crypto-accent transition-colors"
+          >
+            <MagnifyingGlassIcon class="w-5 h-5" />
+          </button>
         </div>
         <button
+          type="button"
           @click="emptySearchQuery"
           class="bg-crypto-card border border-crypto-border text-crypto-text p-2 rounded-lg hover:opacity-90 transition-opacity"
         >
           <XMarkIcon class="w-5 h-5" />
         </button>
-      </div>
+      </form>
     </div>
   </header>
 </template>

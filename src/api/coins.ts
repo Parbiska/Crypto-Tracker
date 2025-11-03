@@ -4,7 +4,7 @@
  */
 
 import { get } from './client'
-import type { Coin, CoinDetail, CoinsListParams } from '@/types'
+import type { Coin, CoinDetail, CoinsListParams, SearchResult, SearchResponse } from '@/types'
 
 /**
  * Получает список криптовалют с рынков
@@ -18,6 +18,7 @@ export async function getCoinsList(params: CoinsListParams = {}): Promise<Coin[]
       page: params.page,
       sparkline: params.sparkline,
       price_change_percentage: params.price_change_percentage,
+      ids: params.ids,
     },
   })
 }
@@ -27,4 +28,26 @@ export async function getCoinsList(params: CoinsListParams = {}): Promise<Coin[]
  */
 export async function getCoinById(id: string): Promise<CoinDetail> {
   return get<CoinDetail>(`/coins/${id}`)
+}
+
+/**
+ * Поиск криптовалют по запросу
+ */
+export async function searchCoins(query: string): Promise<SearchResult[]> {
+  if (!query.trim()) {
+    return []
+  }
+
+  try {
+    const response = await get<SearchResponse>('/search', {
+      params: {
+        query: query.trim(),
+      },
+    })
+
+    return response.coins || []
+  } catch (error) {
+    console.error('Search API error:', error)
+    throw error
+  }
 }

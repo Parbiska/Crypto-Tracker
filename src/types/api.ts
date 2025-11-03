@@ -13,6 +13,7 @@ export interface CoinsListParams {
   page?: number
   sparkline?: boolean
   price_change_percentage?: string
+  ids?: string
 }
 
 /**
@@ -32,4 +33,23 @@ export interface ApiError {
   message: string
   status?: number
   code?: string
+}
+
+/**
+ * Результат поиска монеты из CoinGecko API
+ */
+export interface SearchResult {
+  id: string
+  name: string
+  symbol: string
+  market_cap_rank?: number
+  thumb?: string
+  large?: string
+}
+
+/**
+ * Ответ API поиска
+ */
+export interface SearchResponse {
+  coins: SearchResult[]
 }
