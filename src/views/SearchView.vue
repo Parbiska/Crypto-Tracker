@@ -61,17 +61,6 @@ watch(
     }
   }
 )
-
-watch(
-  () => searchStore.searchResults,
-  async newResults => {
-    if (searchStore.hasSearchQuery && newResults.length > 0) {
-      const results = await searchStore.getSearchResultsAsCoinCards()
-      coins.value = results
-    }
-  },
-  { deep: true }
-)
 </script>
 
 <template>
