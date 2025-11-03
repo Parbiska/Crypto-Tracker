@@ -1,7 +1,5 @@
 {
-  "css.customData": [".vscode/css-custom-data.json"],
-  "tailwindCSS.experimental.classRegex": [
-    ["class:\\s*?[\"'`]([^\"'`]*).*?[\"'`]", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  "css.customData": [
+    ".vscode/css-custom-data.json"
   ]
 }
-
