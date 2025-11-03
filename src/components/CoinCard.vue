@@ -1,26 +1,13 @@
 <script setup lang="ts">
 import type { CoinCardData } from '@/types'
 import { RouterLink } from 'vue-router'
+import { formatPrice } from '@/utils/format'
 
 interface Props {
   coin: CoinCardData
 }
 
 defineProps<Props>()
-
-const formatPrice = (price: number) => {
-  if (price <= 1) {
-    return price.toLocaleString('en-US', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 6,
-    })
-  }
-
-  return price.toLocaleString('en-US', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  })
-}
 </script>
 
 <template>

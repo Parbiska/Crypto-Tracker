@@ -4,6 +4,7 @@ import { computed, ref, watch } from 'vue'
 import type { CoinDetail } from '@/types'
 import { getCoinById } from '@/api/coins'
 import Preloader from '@/components/Preloader.vue'
+import { formatPrice } from '@/utils/format'
 
 const route = useRoute()
 const isLoading = ref(false)
@@ -11,20 +12,6 @@ const error = ref<string | null>(null)
 const coinDetail = ref<CoinDetail | null>(null)
 
 const coinId = computed(() => (route.params.id ? String(route.params.id) : null))
-
-const formatPrice = (price: number | undefined): string => {
-  if (price === undefined || price === null) return 'N/A'
-  if (price <= 1) {
-    return price.toLocaleString('en-US', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 6,
-    })
-  }
-  return price.toLocaleString('en-US', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  })
-}
 
 const formatLargeNumber = (num: number | undefined): string => {
   if (num === undefined || num === null) return 'N/A'
