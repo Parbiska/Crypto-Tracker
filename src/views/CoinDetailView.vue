@@ -1,10 +1,39 @@
 <script setup lang="ts">
 import { useRoute, RouterLink } from 'vue-router'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
+import type { CoinDetail } from '@/types'
+import { getCoinById } from '@/api/coins'
+import Preloader from '@/components/Preloader.vue'
 
 const route = useRoute()
+const isLoading = ref(false)
+const error = ref<string | null>(null)
+const coinDetail = ref<CoinDetail | null>(null)
 
 const coinId = computed(() => (route.params.id ? String(route.params.id) : null))
+
+const fetchCoinDetail = async () => {
+  isLoading.value = true
+  error.value = null
+
+  try {
+    if (!coinId.value) {
+      throw new Error('Отсутствует ID монеты')
+    }
+    const data = await getCoinById(coinId.value)
+    coinDetail.value = data
+  } catch (err) {
+    console.error('Failed to fetch coin:', err)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+watch(coinId, () => {
+  if (coinId.value) {
+    fetchCoinDetail()
+  }
+}, { immediate: true })
 </script>
 
 <template>
@@ -20,6 +49,12 @@ const coinId = computed(() => (route.params.id ? String(route.params.id) : null)
       >
         На главную
       </RouterLink>
+    </div>
+
+    <Preloader v-else-if="isLoading" />
+
+    <div v-else-if="error" class="bg-crypto-red/10 border border-crypto-red rounded-lg p-4 mb-6">
+      <p class="text-crypto-red">{{ error }}</p>
     </div>
 
     <div v-else>
