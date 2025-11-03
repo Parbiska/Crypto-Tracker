@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import type { CoinCardData } from '@/types'
 import { RouterLink } from 'vue-router'
-import { formatPrice } from '@/utils/format'
+import { formatPrice, formatPriceChange } from '@/utils/format'
 import { useFavoritesStore } from '@/stores/favorites'
 import { StarIcon } from '@heroicons/vue/24/solid'
 import { StarIcon as StarOutlineIcon } from '@heroicons/vue/24/outline'
@@ -54,8 +54,7 @@ const handleToggleFavorite = (e: Event) => {
           :class="coin.price_change_percentage_24h >= 0 ? 'text-crypto-green' : 'text-crypto-red'"
           class="text-sm font-medium"
         >
-          {{ coin.price_change_percentage_24h >= 0 ? '+' : ''
-          }}{{ coin.price_change_percentage_24h }}%
+          {{ formatPriceChange(coin.price_change_percentage_24h) }}
         </p>
       </div>
     </div>

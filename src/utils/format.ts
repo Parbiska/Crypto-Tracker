@@ -21,3 +21,14 @@ export const formatPrice = (price: number | undefined): string => {
   })
 }
 
+/**
+ * Форматирует изменение цены в процентах
+ * @param change - изменение цены в процентах
+ * @returns отформатированная строка с знаком и округлением до 1 знака после запятой
+ */
+export const formatPriceChange = (change: number | undefined): string => {
+  if (change === undefined || change === null) return 'N/A'
+  const rounded = change.toFixed(1)
+  const sign = change >= 0 ? '+' : ''
+  return `${sign}${rounded}%`
+}
