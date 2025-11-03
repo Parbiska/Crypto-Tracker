@@ -7,23 +7,23 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
     },
     {
       path: '/favorites',
       name: 'favorites',
-      component: () => import('@/views/FavoritesView.vue')
+      component: () => import('@/views/FavoritesView.vue'),
     },
     {
       path: '/coin/:id',
       name: 'coin-detail',
-      component: () => import('@/views/CoinDetailView.vue')
+      component: () => import('@/views/CoinDetailView.vue'),
     },
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
-      component: () => import('@/views/NotFoundView.vue')
-    }
+      component: () => import('@/views/NotFoundView.vue'),
+    },
   ],
 })
 

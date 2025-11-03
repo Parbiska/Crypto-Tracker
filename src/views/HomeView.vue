@@ -12,17 +12,10 @@ const coins = ref<CoinCardData[]>([
 
 <template>
   <div>
-    <h2 class="text-2xl font-bold text-crypto-text mb-6">
-      Топ криптовалют
-    </h2>
+    <h2 class="text-2xl font-bold text-crypto-text mb-6">Топ криптовалют</h2>
 
     <div class="grid gap-4">
-      <CoinCard 
-        v-for="coin in coins" 
-        :key="coin.id"
-        :coin="coin"
-      />
+      <CoinCard v-for="coin in coins" :key="coin.id" :coin="coin" />
     </div>
   </div>
 </template>
-

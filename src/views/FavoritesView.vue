@@ -8,16 +8,10 @@ const favorites = ref<CoinCardData[]>([])
 
 <template>
   <div>
-    <h2 class="text-2xl font-bold text-crypto-text mb-6">
-      Избранное
-    </h2>
+    <h2 class="text-2xl font-bold text-crypto-text mb-6">Избранное</h2>
 
     <div v-if="favorites.length > 0" class="grid gap-4">
-      <CoinCard 
-        v-for="coin in favorites" 
-        :key="coin.id"
-        :coin="coin"
-      />
+      <CoinCard v-for="coin in favorites" :key="coin.id" :coin="coin" />
     </div>
 
     <div v-else class="text-center text-crypto-text-secondary py-12">
@@ -25,4 +19,3 @@ const favorites = ref<CoinCardData[]>([])
     </div>
   </div>
 </template>
-

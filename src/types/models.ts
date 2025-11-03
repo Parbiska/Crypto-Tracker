@@ -54,4 +54,3 @@ export interface CoinDetail extends Coin {
     price_change_percentage_30d?: number
   }
 }
-
